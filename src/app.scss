@@ -1,0 +1,61 @@
+:root {
+  font-size: 16px;
+}
+
+.container {
+  // https://getbootstrap.com/docs/5.0/layout/grid/#grid-options
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.calendar-title {
+  font-size: 1rem;
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.day-grid {
+  display: grid;
+  gap: 0.5rem;
+  grid: auto-flow / repeat(7, 1fr);
+
+  >.head {
+    font-weight: bold;
+  }
+
+  >* {
+    aspect-ratio: 1;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.months {
+  margin-top: 2rem;
+  display: flex;
+  gap: .5rem;
+  row-gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: start;
+
+  >* {
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    padding: 0.25rem;
+    flex: 1 0 auto;
+    min-width: 40px;
+    max-width: 50px;
+    user-select: none;
+    cursor: pointer;
+    text-align: center;
+  }
+}
+
+._highlight {
+  background-color: #ccc;
+  font-weight: bold;
+}
