@@ -2,6 +2,8 @@
 MIT open source, React, TypeScript, Vite, SCSS
 
 
+![Free calendar demo](free-calendar-demo-video.gif)
+
 # How to run the project locally
 
 - Required software/tools:
