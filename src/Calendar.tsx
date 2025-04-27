@@ -45,24 +45,26 @@ export default function Calendar() {
   const startDayIndex = getDay(firstDayOfMonth);
   const endDayIndex = getDay(lastDayOfMonth);
 
-  const changeInitialDate = (monthIndex: number) => (_: MouseEvent<HTMLElement>) => {
+  const changeInitialDate = (monthIndex: number) => (_: MouseEvent<HTMLDivElement>) => {
     const diffIndex = monthIndex - getMonth(initialDate);
 
     const result = match(diffIndex)
-      .with(0, () => initialDate)
       .with(P.number.lt(0), () => subMonths(initialDate, Math.abs(diffIndex)))
       .with(P.number.gt(0), () => addMonths(initialDate, diffIndex))
-      .otherwise(() => { throw new Error(); });
+      .with(P._, () => initialDate)
+      .otherwise(() => { throw new Error(`Invalid diffIndex ${diffIndex}`); });
 
     setInitialDate(result);
   }
+
+  const showToday = () => setInitialDate(new Date());
 
   return (
     <div className='container'>
       <h1 className='calendar-title'>Free calendar - ปฎิทินแจกฟรี</h1>
       <div className='day-grid'>
-        {dayNames.map((d, index) =>
-          <div key={index} className='head'>{d}</div>
+        {dayNames.map((day, index) =>
+          <div key={index} className='head'>{day}</div>
         )}
         {
           Array.from({ length: startDayIndex }).map((_, index) =>
@@ -71,7 +73,9 @@ export default function Calendar() {
         }
 
         {daysInMonth.map((day, index) =>
-          <div key={index} className={(isToday(day) ? '_highlight' : '')}>{format(day, 'd')}</div>
+          <div key={index} className={(isToday(day) ? '_highlight' : '')}>
+            {format(day, 'd')}
+          </div>
         )}
 
         {
@@ -82,11 +86,16 @@ export default function Calendar() {
       </div>
 
       <div className='months'>
-        {monthNames.map((m, monthIndex) =>
-          <div key={monthIndex} className={(getMonth(initialDate) == monthIndex ? '_highlight' : '')} onClick={changeInitialDate(monthIndex)}>
-            {m}
+        {monthNames.map((month, monthIndex) =>
+          <div
+            key={monthIndex}
+            className={(getMonth(initialDate) == monthIndex ? '_highlight' : '')}
+            onClick={changeInitialDate(monthIndex)}
+          >
+            {month}
           </div>
         )}
+        <div className='_highlight' onClick={showToday}>Today</div>
       </div>
     </div>
   )
