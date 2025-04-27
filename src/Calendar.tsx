@@ -16,25 +16,20 @@ import {
 import { useState, MouseEvent } from 'react';
 import { match, P } from 'ts-pattern';
 
+const today = new Date();
+const firstDayOfWeek = startOfWeek(today)
+const dayNames = Array.from({ length: 7 }).map(
+  (_, i) => format(addDays(firstDayOfWeek, i), 'E').toUpperCase()
+);
+
+const firstMonth = startOfYear(today)
+const monthNames = Array.from({ length: 12 }).map(
+  (_, i) => format(addMonths(firstMonth, i), 'MMM').toUpperCase()
+);
+
 export default function Calendar() {
 
   const [initialDate, setInitialDate] = useState(new Date());
-  const changeInitialDate = (monthIndex: number) => (_: MouseEvent<HTMLElement>) => {
-    const diff = monthIndex - getMonth(initialDate);
-
-    const result = match(diff)
-      .with(0, () => initialDate)
-      .with(P.number.lt(0), () => subMonths(initialDate, Math.abs(diff)))
-      .with(P.number.gt(0), () => addMonths(initialDate, diff))
-      .otherwise(() => { throw new Error(); });
-
-    setInitialDate(result);
-  }
-
-  const firstDayOfWeek = startOfWeek(initialDate)
-  const dayNames = Array.from({ length: 7 }).map(
-    (_, i) => format(addDays(firstDayOfWeek, i), 'E').toUpperCase()
-  );
 
   const firstDayOfMonth = startOfMonth(initialDate);
   const lastDayOfMonth = endOfMonth(initialDate);
@@ -50,10 +45,17 @@ export default function Calendar() {
   const startDayIndex = getDay(firstDayOfMonth);
   const endDayIndex = getDay(lastDayOfMonth);
 
-  const firstMonth = startOfYear(initialDate);
-  const monthNames = Array.from({ length: 12 }).map(
-    (_, i) => format(addMonths(firstMonth, i), 'MMM').toUpperCase()
-  );
+  const changeInitialDate = (monthIndex: number) => (_: MouseEvent<HTMLElement>) => {
+    const diffIndex = monthIndex - getMonth(initialDate);
+
+    const result = match(diffIndex)
+      .with(0, () => initialDate)
+      .with(P.number.lt(0), () => subMonths(initialDate, Math.abs(diffIndex)))
+      .with(P.number.gt(0), () => addMonths(initialDate, diffIndex))
+      .otherwise(() => { throw new Error(); });
+
+    setInitialDate(result);
+  }
 
   return (
     <div className='container'>
